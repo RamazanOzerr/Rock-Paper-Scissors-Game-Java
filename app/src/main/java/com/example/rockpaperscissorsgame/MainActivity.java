@@ -1,15 +1,11 @@
 package com.example.rockpaperscissorsgame;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Toast;
-
 import com.example.rockpaperscissorsgame.databinding.ActivityMainBinding;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -19,7 +15,9 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private Animation anim3, anim2, anim1;
     private Random random;
-    private int randomNum, computer, score;
+    private int randomNum;
+    private int score;
+    private String gameMode;
     private List<Integer> types;
 
 
@@ -36,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
         score = 0;
         random = new Random();
         types = new ArrayList<>();
+        gameMode = getIntent().getStringExtra("gamemode");
 
         anim1 = AnimationUtils.loadAnimation(this, R.anim.slide_in_right);
         anim2 = AnimationUtils.loadAnimation(this, R.anim.slide_out_left);
@@ -94,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void computersTurn(int ourMove){
-        computer = generateRandomNumber();
+        int computer = generateRandomNumber(gameMode, ourMove);
         if(computer == 1){
             binding.imagePlayer2.setImageResource(R.drawable.rock);
             binding.imagePlayer2.startAnimation(anim1);
@@ -103,10 +102,24 @@ public class MainActivity extends AppCompatActivity {
             binding.imagePlayer2.setImageResource(R.drawable.paper);
             binding.imagePlayer2.startAnimation(anim1);
             setWinner(ourMove, 2);
-        }else {
+        } else if (computer == 3) {
             binding.imagePlayer2.setImageResource(R.drawable.scissors);
             binding.imagePlayer2.startAnimation(anim1);
             setWinner(ourMove, 3);
+        } else { // buraya girdiyse easy mode dayız demektir
+           if(ourMove == 1){
+               binding.imagePlayer2.setImageResource(R.drawable.scissors);
+               binding.imagePlayer2.startAnimation(anim1);
+               setWinner(ourMove, 3);
+           } else if (ourMove == 2) {
+               binding.imagePlayer2.setImageResource(R.drawable.rock);
+               binding.imagePlayer2.startAnimation(anim1);
+               setWinner(ourMove, 1);
+           } else {
+               binding.imagePlayer2.setImageResource(R.drawable.paper);
+               binding.imagePlayer2.startAnimation(anim1);
+               setWinner(ourMove, 2);
+           }
         }
     }
 
@@ -132,19 +145,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void weWin(){
-        binding.textResult.setText("WIN");
+        binding.textResult.setText(R.string.win);
         score += 10;
         newRound();
     }
 
     private void compWin(){
-        binding.textResult.setText("LOST");
+        binding.textResult.setText(R.string.lost);
         score -= 10;
         newRound();
     }
 
     private void draw(){
-        binding.textResult.setText("DRAW");
+        binding.textResult.setText(R.string.draw);
         newRound();
     }
 
@@ -255,6 +268,24 @@ public class MainActivity extends AppCompatActivity {
     // generates a random number 1-3, we used to get a new card
     private int generateRandomNumber() {
         return random.nextInt(3) + 1;
+    }
+
+    private int generateRandomNumber(String gameMode, int ourMove){
+
+        if (gameMode.equals("easy")) {
+           return random.nextInt(5) + 1;
+        } else if (gameMode.equals("med")) {
+            // do nothing
+            return random.nextInt(3) + 1;
+        } else {
+            if (ourMove == 1) {
+                return random.nextInt(2) + 2; // should return 2 or 3
+            } else if (ourMove == 2) {
+                return random.nextInt(2) * 2 + 1; // should return 1 or 3
+            } else {
+                return random.nextInt(2) + 1; // should return 1 or 2
+            }
+        }
     }
 
 }
