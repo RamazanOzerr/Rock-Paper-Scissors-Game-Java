@@ -75,4 +75,17 @@
 
     </LinearLayout>
 
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/text_highest_score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="highest score"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/text_activity_game_mode"
+        />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,4 +4,6 @@
     <string name="win">WIN</string>
     <string name="draw">DRAW</string>
     <string name="lost">LOST</string>
+    <string name="saved_high_score_key">saved high score key</string>
+    <string name="shared_preferences_key">shared preferences</string>
 </resources>

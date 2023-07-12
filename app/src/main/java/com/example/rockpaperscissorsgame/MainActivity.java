@@ -1,6 +1,10 @@
 package com.example.rockpaperscissorsgame;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
@@ -16,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
     private Animation anim3, anim2, anim1;
     private Random random;
     private int randomNum;
-    private int score;
+    private int score, highestScore;
     private String gameMode;
     private List<Integer> types;
 
@@ -35,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         random = new Random();
         types = new ArrayList<>();
         gameMode = getIntent().getStringExtra("gamemode");
+        highestScore = getIntent().getIntExtra("highest_score", score);
 
         anim1 = AnimationUtils.loadAnimation(this, R.anim.slide_in_right);
         anim2 = AnimationUtils.loadAnimation(this, R.anim.slide_out_left);
@@ -288,4 +293,19 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        saveHighestScore();
+    }
+
+    private void saveHighestScore(){
+        if(score > highestScore){
+            SharedPreferences sharedPref = getSharedPreferences(
+                    String.valueOf(R.string.shared_preferences_key),Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putInt(getString(R.string.saved_high_score_key), score);
+            editor.apply();
+        }
+    }
 }
